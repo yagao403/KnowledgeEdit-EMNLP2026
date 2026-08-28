@@ -1,0 +1,49 @@
+# Local environments and credentials
+.env
+.env.*
+!.env.example
+.venv/
+*.code-workspace
+.vscode/
+
+# Python/build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Generated experiment artifacts
+adapters/
+checkpoints/
+evaluation_records/
+evaluations/
+logbook/
+out/
+training_data/
+wandb/
+web-profiles/
+/sandbox/
+/temp/
+*.log
+*.out
+*.err
+
+# Paper datasets are downloaded/prepared locally
+data/
+
+# Generated task outputs
+tasks/t_knowledge_edit/**/results/
+
+# Editor/OS files
+.DS_Store
+**/.DS_Store
+
+# Tensor-parallel diagnostics
+tensor_parallelism/adapters/
+tensor_parallelism/checkpoints/
+tensor_parallelism/input_tensors/*.png
+tensor_parallelism/logs/
+tensor_parallelism/model_keys.txt

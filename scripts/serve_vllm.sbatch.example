@@ -1,0 +1,50 @@
+#!/bin/bash
+# Replace all CHANGE_ME values before submitting with: sbatch <this-file>
+
+#SBATCH --job-name=knowledge-edit-vllm
+#SBATCH --account=CHANGE_ME
+#SBATCH --partition=CHANGE_ME
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=7
+#SBATCH --gpus-per-node=8
+#SBATCH --mem=480G
+#SBATCH --time=03:00:00
+#SBATCH --output=slurm-%x-%j.out
+
+set -euo pipefail
+
+PROJECT_ROOT=/scratch/CHANGE_ME/edit-knowledge-not-just-facts
+VENV_PATH=/scratch/CHANGE_ME/venv
+CONTAINER_PATH=/scratch/CHANGE_ME/pytorch-vllm.sif
+BIND_ROOT=/scratch/CHANGE_ME
+MODEL_ID=Qwen/Qwen3-32B
+TOKENIZER_ID=Qwen/Qwen3-32B
+PORT=8000
+
+module use /appl/local/containers/ai-modules
+module load singularity-AI-bindings
+
+export SINGULARITYENV_PREPEND_PATH=/user-software/bin
+export SINGULARITYENV_PYTHONPATH="$PROJECT_ROOT"
+export SINGULARITYENV_HIP_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export SINGULARITYENV_VLLM_USE_V1=1
+export SINGULARITYENV_VLLM_TARGET_DEVICE=rocm
+export SINGULARITYENV_VLLM_ROCM_USE_AITER=0
+export SINGULARITYENV_VLLM_V1_USE_PREFILL_DECODE_ATTENTION=1
+export SINGULARITYENV_VLLM_LOGGING_LEVEL=INFO
+
+COMMAND="source '$VENV_PATH/bin/activate' && \
+cd '$PROJECT_ROOT' && \
+python -u -m core.server \
+  --host 0.0.0.0 \
+  --port '$PORT' \
+  --model '$MODEL_ID' \
+  --tokenizer '$TOKENIZER_ID' \
+  --dtype auto \
+  --tensor-parallel-size 8"
+
+srun singularity exec \
+  --bind "$BIND_ROOT:$BIND_ROOT" \
+  "$CONTAINER_PATH" \
+  /bin/bash -lc "$COMMAND"

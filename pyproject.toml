@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edit-knowledge-not-just-facts"
+version = "0.1.0"
+description = "Code for multi-step knowledge editing over background stories"
+readme = "readme.md"
+requires-python = ">=3.10"
+authors = [
+  {name = "Ya Gao"},
+  {name = "Kalle Kujanpää"},
+  {name = "Pekka Marttinen"},
+  {name = "Harri Valpola"},
+  {name = "Alexander Ilin"},
+]
+dependencies = [
+  "httpx",
+  "pydantic>=2",
+  "tenacity",
+  "torch",
+  "transformers",
+  "typing-extensions",
+]
+
+[project.optional-dependencies]
+train = [
+  "fsspec",
+  "numpy",
+  "peft",
+  "pynvml",
+  "termcolor",
+  "tqdm",
+  "wandb",
+]
+serve = [
+  "fastapi",
+  "uvicorn",
+]
+rocm = [
+  "pyrsmi",
+]
+evaluate = [
+  "datasets",
+  "ipykernel",
+  "ipython",
+  "nest-asyncio",
+  "nltk",
+  "numpy",
+  "openai",
+  "python-dotenv",
+  "scipy",
+  "tqdm",
+]
+dev = [
+  "pytest",
+  "ruff",
+]
+
+[tool.setuptools.packages.find]
+include = ["configs*", "core*", "tasks*", "tensor_parallelism*", "training*"]
+exclude = ["training_data*"]
+namespaces = false
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B"]

@@ -1,0 +1,54 @@
+#!/bin/bash
+# Replace all CHANGE_ME values before submitting with: sbatch <this-file>
+
+#SBATCH --job-name=knowledge-edit-train
+#SBATCH --account=CHANGE_ME
+#SBATCH --partition=CHANGE_ME
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=56
+#SBATCH --gpus-per-node=8
+#SBATCH --mem=480G
+#SBATCH --time=12:00:00
+#SBATCH --output=slurm-%x-%j.out
+
+set -euo pipefail
+
+PROJECT_ROOT=/scratch/CHANGE_ME/edit-knowledge-not-just-facts
+VENV_PATH=/scratch/CHANGE_ME/venv
+CONTAINER_PATH=/scratch/CHANGE_ME/pytorch-vllm.sif
+BIND_ROOT=/scratch/CHANGE_ME
+
+# These paths are intentionally not supplied by the repository.
+export DATA_PATH=/scratch/CHANGE_ME/data
+export LOGBOOK_PATH=/scratch/CHANGE_ME/logbook
+export HF_HOME=/scratch/CHANGE_ME/hf-cache
+
+module use /appl/local/containers/ai-modules
+module load singularity-AI-bindings
+
+export SINGULARITYENV_PREPEND_PATH=/user-software/bin
+export SINGULARITYENV_DATA_PATH="$DATA_PATH"
+export SINGULARITYENV_LOGBOOK_PATH="$LOGBOOK_PATH"
+export SINGULARITYENV_HF_HOME="$HF_HOME"
+export SINGULARITYENV_PYTHONPATH="$PROJECT_ROOT"
+
+TRAIN_GLOB='knowledge_edit/fictbio/train/**/*.xml'
+VALIDATION_GLOB='knowledge_edit/fictbio/validation/**/*.xml'
+
+COMMAND="source '$VENV_PATH/bin/activate' && \
+cd '$PROJECT_ROOT' && \
+python -u -m configs.train_distillation \
+  --train '$TRAIN_GLOB' \
+  --validation '$VALIDATION_GLOB' \
+  --dataset fictbio \
+  --base-model llama3.1-70b \
+  --run-name fictbio-llama3.1-70b \
+  --checkpoint-interval 240 \
+  --val-interval 320 \
+  --log-interval 1"
+
+srun singularity exec \
+  --bind "$BIND_ROOT:$BIND_ROOT" \
+  "$CONTAINER_PATH" \
+  /bin/bash -lc "$COMMAND"

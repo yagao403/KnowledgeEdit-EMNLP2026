@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite our paper."
+title: "Edit Knowledge, Not Just Facts via Multi-Step Reasoning over Background Stories"
+type: software
+authors:
+  - family-names: Gao
+    given-names: Ya
+  - family-names: Kujanpää
+    given-names: Kalle
+  - family-names: Marttinen
+    given-names: Pekka
+  - family-names: Valpola
+    given-names: Harri
+  - family-names: Ilin
+    given-names: Alexander
+version: 0.1.0
+identifiers:
+  - type: doi
+    value: 10.48550/arXiv.2602.02028
