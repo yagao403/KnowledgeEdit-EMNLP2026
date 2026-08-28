@@ -119,7 +119,3 @@ The retained task code covers data collection and evaluation, MMLU, ICE, single-
   year={2026}
 }
 ```
-
-## License
-
-A code license has not yet been selected. Add one before making the repository public.
