@@ -46,7 +46,7 @@ Copy `.env.example` to `.env` or export the variables in your shell. Dataset roo
 
 ## Important: IPython task workflow
 
-The experiment drivers in `tasks/t_knowledge_edit/` are **IPython percent-format scripts**, not conventional command-line programs. Open them in an editor with IPython cell support and run the cells in order. Running an entire evaluation file with ordinary `python` may fail with `SyntaxError: 'await' outside function` or immediately start a full experiment.
+The experiment drivers in `tasks/t_knowledge_edit/` are **IPython percent-format scripts**, not conventional command-line programs. Open them in an editor with IPython cell support and run the cells in order.
 
 Load the path configuration before importing `core` in the first cell of a new IPython session:
 
@@ -59,9 +59,7 @@ Load the path configuration before importing `core` in the first cell of a new I
 
 The repository includes the minimal custom server required by the retained
 task scripts. It understands this project's serialized messages and is not the
-standard vLLM OpenAI-compatible endpoint. The paper-only implementation uses
-vLLM V1, supports text models, and exposes only `GET /health` and
-`POST /generate`. Start it on a compatible GPU host:
+standard vLLM OpenAI-compatible endpoint.
 
 ```bash
 python -m core.server \
