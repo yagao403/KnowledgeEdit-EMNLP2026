@@ -3,7 +3,7 @@
 The public entry points expose training choices as ordinary command-line
 arguments. They do not select hidden dataset-specific recipes.
 
-The retained FictBio/Llama distillation settings were:
+The retained distillation settings were:
 
 Example:
 
